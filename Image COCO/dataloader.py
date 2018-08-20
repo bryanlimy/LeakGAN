@@ -3,10 +3,12 @@ import random
 
 
 class Gen_Data_loader():
-    def __init__(self, batch_size,length):
+
+    def __init__(self, batch_size, length):
         self.batch_size = batch_size
         self.token_stream = []
         self.length = length
+
     def create_batches(self, data_file):
         self.token_stream = []
         with open(data_file, 'r') as f:
@@ -19,7 +21,8 @@ class Gen_Data_loader():
 
         self.num_batch = int(len(self.token_stream) / self.batch_size)
         self.token_stream = self.token_stream[:self.num_batch * self.batch_size]
-        self.sequence_batch = np.split(np.array(self.token_stream), self.num_batch, 0)
+        self.sequence_batch = np.split(
+            np.array(self.token_stream), self.num_batch, 0)
         self.pointer = 0
 
     def next_batch(self):
@@ -32,22 +35,24 @@ class Gen_Data_loader():
 
 
 class Dis_dataloader():
-    def __init__(self, batch_size,length):
+
+    def __init__(self, batch_size, length):
         self.batch_size = batch_size
         self.sentences = np.array([])
         self.labels = np.array([])
         self.length = length
+
     def load_train_data(self, positive_file, negative_file):
         # Load data
         positive_examples = []
         negative_examples = []
-        with open(positive_file)as fin:
+        with open(positive_file) as fin:
             for line in fin:
                 line = line.strip()
                 line = line.split()
                 parse_line = [int(x) for x in line]
                 positive_examples.append(parse_line)
-        with open(negative_file)as fin:
+        with open(negative_file) as fin:
             for line in fin:
                 line = line.strip()
                 line = line.split()
@@ -76,12 +81,11 @@ class Dis_dataloader():
 
         self.pointer = 0
 
-
     def next_batch(self):
-        ret = self.sentences_batches[self.pointer], self.labels_batches[self.pointer]
+        ret = self.sentences_batches[self.pointer], self.labels_batches[
+            self.pointer]
         self.pointer = (self.pointer + 1) % self.num_batch
         return ret
 
     def reset_pointer(self):
         self.pointer = 0
-
